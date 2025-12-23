@@ -1,9 +1,11 @@
 import React from 'react';
 
+type Section = 'home' | 'reels' | 'news' | 'debates' | 'surveys' | 'tendencies' | 'community';
+
 interface ColombianLayoutProps {
   children: React.ReactNode;
-  activeSection?: 'home' | 'reels' | 'news' | 'debates' | 'surveys' | 'tendencies' | 'community';
-  onNavigate?: (section: string) => void;
+  activeSection?: Section;
+  onNavigate?: (section: Section) => void;
 }
 
 export const ColombianLayout: React.FC<ColombianLayoutProps> = ({ 
@@ -18,7 +20,7 @@ export const ColombianLayout: React.FC<ColombianLayoutProps> = ({
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-blue-900">Adriana Guide</h1>
             <div className="flex gap-4">
-              {['home', 'reels', 'news', 'debates', 'surveys', 'tendencies', 'community'].map((section) => (
+              {(['home', 'reels', 'news', 'debates', 'surveys', 'tendencies', 'community'] as const).map((section) => (
                 <button
                   key={section}
                   onClick={() => onNavigate?.(section)}

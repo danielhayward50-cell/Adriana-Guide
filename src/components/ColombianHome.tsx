@@ -1,7 +1,9 @@
 import React from 'react';
 
+type Section = 'home' | 'reels' | 'news' | 'debates' | 'surveys' | 'tendencies' | 'community';
+
 interface ColombianHomeProps {
-  onNavigate: (section: string) => void;
+  onNavigate: (section: Section) => void;
 }
 
 export const ColombianHome: React.FC<ColombianHomeProps> = ({ onNavigate }) => {
