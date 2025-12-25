@@ -39,6 +39,39 @@ npm run build
 npm run preview
 ```
 
+## Deployment
+
+### Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/danielhayward50-cell/Adriana-Guide)
+
+**Option 1: Deploy via GitHub (Recommended)**
+1. Push your code to GitHub
+2. Go to [vercel.com](https://vercel.com)
+3. Sign in with GitHub
+4. Click "Add New Project"
+5. Import your repository
+6. Vercel will auto-detect the Vite framework and configure the build
+7. Click "Deploy"
+
+**Option 2: Deploy via Vercel CLI**
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel
+
+# Deploy to production
+vercel --prod
+```
+
+The app will be available at a URL like: `https://your-project.vercel.app`
+
+**Environment Variables on Vercel:**
+- Add your environment variables in Vercel dashboard under Project Settings → Environment Variables
+- Use the same variable names from `.env.example`
+
 ## Development
 
 This project uses:
