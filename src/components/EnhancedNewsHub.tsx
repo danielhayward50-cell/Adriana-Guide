@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { commentStore } from '../store/commentStore';
 
 type NewsRegion = 'world' | 'south-america';
 type PoliticalPerspective = 'neutral' | 'right' | 'left';
@@ -159,16 +160,71 @@ export const EnhancedNewsHub: React.FC = () => {
   const [activeRegion, setActiveRegion] = useState<NewsRegion>('world');
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
   const [perspective, setPerspective] = useState<PoliticalPerspective>('neutral');
+  const [commentText, setCommentText] = useState('');
+  const [authorName, setAuthorName] = useState('');
+  const [articleComments, setArticleComments] = useState<any[]>([]);
+  const [showComments, setShowComments] = useState(false);
 
   const filteredNews = mockNews.filter(article => article.region === activeRegion);
+
+  // Subscribe to comment updates
+  useEffect(() => {
+    const unsubscribe = commentStore.subscribe(() => {
+      if (selectedArticle) {
+        setArticleComments(commentStore.getCommentsBySource('article', selectedArticle.id));
+      }
+    });
+    return unsubscribe;
+  }, [selectedArticle]);
+
+  // Load comments when article opens
+  useEffect(() => {
+    if (selectedArticle) {
+      setArticleComments(commentStore.getCommentsBySource('article', selectedArticle.id));
+    }
+  }, [selectedArticle]);
 
   const openArticle = (article: NewsArticle) => {
     setSelectedArticle(article);
     setPerspective('neutral'); // Reset to neutral when opening new article
+    setShowComments(false);
+    setCommentText('');
+    setAuthorName('');
   };
 
   const closeArticle = () => {
     setSelectedArticle(null);
+    setShowComments(false);
+  };
+
+  const handleAddComment = () => {
+    if (!selectedArticle || !commentText.trim() || !authorName.trim()) return;
+    
+    commentStore.addComment({
+      author: authorName.trim(),
+      content: commentText.trim(),
+      sourceType: 'article',
+      sourceId: selectedArticle.id,
+      sourceTitle: selectedArticle.title,
+    });
+
+    setCommentText('');
+    setAuthorName('');
+    setShowComments(true);
+  };
+
+  const handleShareTosCommunity = () => {
+    if (!selectedArticle) return;
+    
+    commentStore.addComment({
+      author: 'You',
+      content: `Check out this article: "${selectedArticle.title}" - ${selectedArticle.description}`,
+      sourceType: 'article',
+      sourceId: selectedArticle.id,
+      sourceTitle: selectedArticle.title,
+    });
+
+    alert('Shared to Community Hub! Check the Community section to see your post.');
   };
 
   return (
@@ -316,13 +372,95 @@ export const EnhancedNewsHub: React.FC = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-6 pt-6 border-t border-gray-200 flex gap-3">
-                <button className="flex-1 bg-blue-900 text-white py-3 rounded-lg hover:bg-blue-800 font-semibold transition-colors">
-                  💬 Comment on this Article
-                </button>
-                <button className="flex-1 bg-yellow-500 text-blue-900 py-3 rounded-lg hover:bg-yellow-600 font-semibold transition-colors">
-                  📢 Share to Community
-                </button>
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                {!showComments ? (
+                  <div className="flex gap-3">
+                    <button 
+                      onClick={() => setShowComments(true)}
+                      className="flex-1 bg-blue-900 text-white py-3 rounded-lg hover:bg-blue-800 font-semibold transition-colors"
+                    >
+                      💬 Comment on this Article
+                    </button>
+                    <button 
+                      onClick={handleShareTosCommunity}
+                      className="flex-1 bg-yellow-500 text-blue-900 py-3 rounded-lg hover:bg-yellow-600 font-semibold transition-colors"
+                    >
+                      📢 Share to Community
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-lg font-semibold text-blue-900">💬 Comments ({articleComments.length})</h3>
+                      <button 
+                        onClick={() => setShowComments(false)}
+                        className="text-sm text-gray-600 hover:text-gray-800"
+                      >
+                        ← Back to Article
+                      </button>
+                    </div>
+
+                    {/* Add Comment Form */}
+                    <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+                      <input
+                        type="text"
+                        value={authorName}
+                        onChange={(e) => setAuthorName(e.target.value)}
+                        placeholder="Your name"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                      <textarea
+                        value={commentText}
+                        onChange={(e) => setCommentText(e.target.value)}
+                        placeholder="Share your thoughts on this article..."
+                        rows={3}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleAddComment}
+                          disabled={!commentText.trim() || !authorName.trim()}
+                          className="bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 font-semibold transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        >
+                          Post Comment
+                        </button>
+                        <button 
+                          onClick={handleShareTosCommunity}
+                          className="bg-yellow-500 text-blue-900 px-6 py-2 rounded-lg hover:bg-yellow-600 font-semibold transition-colors"
+                        >
+                          📢 Share to Community
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Comments List */}
+                    <div className="space-y-3 max-h-96 overflow-y-auto">
+                      {articleComments.length === 0 ? (
+                        <p className="text-gray-500 text-center py-4">No comments yet. Be the first to comment!</p>
+                      ) : (
+                        articleComments.map((comment) => (
+                          <div key={comment.id} className="bg-white p-4 rounded-lg border border-gray-200">
+                            <div className="flex justify-between items-start mb-2">
+                              <span className="font-semibold text-blue-900">{comment.author}</span>
+                              <span className="text-xs text-gray-500">
+                                {new Date(comment.timestamp).toLocaleTimeString()}
+                              </span>
+                            </div>
+                            <p className="text-gray-700">{comment.content}</p>
+                            <div className="mt-2 flex gap-4 text-sm">
+                              <button 
+                                onClick={() => commentStore.likeComment(comment.id)}
+                                className="text-gray-600 hover:text-blue-600 transition-colors"
+                              >
+                                👍 Like ({comment.likes})
+                              </button>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
