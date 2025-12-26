@@ -263,7 +263,7 @@ export const EnhancedReelsHub: React.FC = () => {
                             <p className="text-gray-700">{comment.content}</p>
                             <div className="mt-2 flex gap-4 text-sm">
                               <button 
-                                onClick={() => commentStore.likeComment(comment.id)}
+                                onClick={() => commentStore.likeComment(comment.id, commentStore.getCurrentUser() || 'Guest')}
                                 className="text-gray-600 hover:text-blue-600 transition-colors"
                               >
                                 👍 Like ({comment.likes})
