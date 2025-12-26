@@ -10,22 +10,25 @@ interface Reel {
 }
 
 const mockReels: Reel[] = [
-  { id: 1, title: 'Colombian Coffee Culture', creator: 'CafeColombia', thumbnail: '☕', views: '125K', category: 'Culture' },
-  { id: 2, title: 'Salsa Dance Tutorial', creator: 'BaileCali', thumbnail: '💃', views: '98K', category: 'Dance' },
-  { id: 3, title: 'Cartagena Travel Guide', creator: 'ViajeroCO', thumbnail: '🏖️', views: '156K', category: 'Travel' },
-  { id: 4, title: 'Colombian Street Food', creator: 'SaborColombia', thumbnail: '🌮', views: '203K', category: 'Food' },
-  { id: 5, title: 'Medellín Nightlife', creator: 'NocheMDE', thumbnail: '🌃', views: '187K', category: 'Lifestyle' },
-  { id: 6, title: 'Amazonas Wildlife', creator: 'NaturaCol', thumbnail: '🦜', views: '142K', category: 'Nature' },
-  { id: 7, title: 'Cumbia Music Mix', creator: 'MusicaCO', thumbnail: '🎵', views: '176K', category: 'Music' },
-  { id: 8, title: 'Bogotá Street Art', creator: 'ArteBogota', thumbnail: '🎨', views: '91K', category: 'Art' },
-  { id: 9, title: 'Colombian Festivals', creator: 'FiestasCO', thumbnail: '🎉', views: '134K', category: 'Culture' },
+  { id: 1, title: 'Gustavo Petro Policy Analysis', creator: 'PoliticsCO', thumbnail: '🏛️', views: '245K', category: 'Politics' },
+  { id: 2, title: 'Colombia Crime Rate Trends 2024', creator: 'DataColombia', thumbnail: '📊', views: '189K', category: 'Crime' },
+  { id: 3, title: 'Trump Latin America Relations', creator: 'GlobalPolitics', thumbnail: '🌎', views: '312K', category: 'Politics' },
+  { id: 4, title: 'Colombian Employment Report', creator: 'EconWatch', thumbnail: '💼', views: '156K', category: 'Employment' },
+  { id: 5, title: 'Healthcare System Updates', creator: 'SaludCO', thumbnail: '🏥', views: '203K', category: 'Health' },
+  { id: 6, title: 'National Security & Terror Threats', creator: 'SecurityNews', thumbnail: '🛡️', views: '276K', category: 'Security' },
+  { id: 7, title: 'Presidential Poll Results', creator: 'EncuestasCO', thumbnail: '📈', views: '198K', category: 'Polls' },
+  { id: 8, title: 'Wealth Distribution in Colombia', creator: 'EconomiaCO', thumbnail: '💰', views: '167K', category: 'Economy' },
+  { id: 9, title: 'Political Debate Highlights', creator: 'DebatesCO', thumbnail: '🎙️', views: '221K', category: 'Politics' },
+  { id: 10, title: 'Petro vs Opposition Analysis', creator: 'PoliticosCO', thumbnail: '⚖️', views: '289K', category: 'Politics' },
+  { id: 11, title: 'Crime Prevention Strategies', creator: 'SeguridadCO', thumbnail: '🚔', views: '178K', category: 'Crime' },
+  { id: 12, title: 'Job Market Analysis 2024', creator: 'EmpleosCO', thumbnail: '📋', views: '145K', category: 'Employment' },
 ];
 
 export const EnhancedReelsHub: React.FC = () => {
   const [selectedReel, setSelectedReel] = useState<Reel | null>(null);
   const [filter, setFilter] = useState<string>('all');
 
-  const categories = ['all', 'Culture', 'Dance', 'Travel', 'Food', 'Lifestyle', 'Nature', 'Music', 'Art'];
+  const categories = ['all', 'Politics', 'Crime', 'Security', 'Employment', 'Health', 'Economy', 'Polls'];
   
   const filteredReels = filter === 'all' 
     ? mockReels 
@@ -42,9 +45,9 @@ export const EnhancedReelsHub: React.FC = () => {
   return (
     <div className="space-y-6">
       <section className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-3xl font-bold text-blue-900 mb-4">Reels Hub</h2>
+        <h2 className="text-3xl font-bold text-blue-900 mb-4">Political & Social Reels</h2>
         <p className="text-gray-700 mb-6">
-          Discover trending Colombian content and culture through engaging video reels.
+          Stay informed on Colombian politics, crime, employment, health, and social issues.
         </p>
 
         {/* Category Filter */}
@@ -69,7 +72,7 @@ export const EnhancedReelsHub: React.FC = () => {
           {filteredReels.map((reel) => (
             <div 
               key={reel.id} 
-              className="bg-gradient-to-br from-yellow-400 to-blue-900 rounded-lg p-6 aspect-video flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform shadow-lg"
+              className="bg-gradient-to-br from-red-600 to-blue-900 rounded-lg p-6 aspect-video flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform shadow-lg"
               onClick={() => openReel(reel)}
             >
               <div className="text-6xl mb-3">{reel.thumbnail}</div>
@@ -97,7 +100,7 @@ export const EnhancedReelsHub: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4" onClick={closeReel}>
           <div className="bg-white rounded-lg max-w-2xl w-full" onClick={(e) => e.stopPropagation()}>
             {/* Video Player Area */}
-            <div className="bg-gradient-to-br from-yellow-400 to-blue-900 aspect-video rounded-t-lg flex items-center justify-center">
+            <div className="bg-gradient-to-br from-red-600 to-blue-900 aspect-video rounded-t-lg flex items-center justify-center">
               <div className="text-center text-white">
                 <div className="text-8xl mb-4">{selectedReel.thumbnail}</div>
                 <div className="text-2xl font-bold">▶️</div>
@@ -113,7 +116,7 @@ export const EnhancedReelsHub: React.FC = () => {
                   <p className="text-gray-600">by @{selectedReel.creator}</p>
                   <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
                     <span>👁️ {selectedReel.views} views</span>
-                    <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full font-semibold">
+                    <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full font-semibold">
                       {selectedReel.category}
                     </span>
                   </div>
@@ -134,7 +137,7 @@ export const EnhancedReelsHub: React.FC = () => {
                 <button className="flex-1 bg-gray-600 text-white py-3 rounded-lg hover:bg-gray-700 font-semibold transition-colors">
                   💬 Comment
                 </button>
-                <button className="flex-1 bg-yellow-500 text-blue-900 py-3 rounded-lg hover:bg-yellow-600 font-semibold transition-colors">
+                <button className="flex-1 bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 font-semibold transition-colors">
                   📤 Share
                 </button>
               </div>
