@@ -164,8 +164,19 @@ export const EnhancedNewsHub: React.FC = () => {
   const [authorName, setAuthorName] = useState('');
   const [articleComments, setArticleComments] = useState<any[]>([]);
   const [showComments, setShowComments] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredNews = mockNews.filter(article => article.region === activeRegion);
+  const filteredNews = mockNews
+    .filter(article => article.region === activeRegion)
+    .filter(article => {
+      if (!searchQuery.trim()) return true;
+      const query = searchQuery.toLowerCase();
+      return (
+        article.title.toLowerCase().includes(query) ||
+        article.description.toLowerCase().includes(query) ||
+        article.fullContent.toLowerCase().includes(query)
+      );
+    });
 
   // Subscribe to comment updates
   useEffect(() => {
@@ -235,6 +246,33 @@ export const EnhancedNewsHub: React.FC = () => {
           Stay updated with the latest news from around the world and South America.
         </p>
 
+        {/* Search Bar */}
+        <div className="mb-6">
+          <div className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="🔍 Search news articles... (e.g., climate, technology, economy)"
+              className="w-full px-6 py-4 pr-12 text-lg border-2 border-gray-300 rounded-full focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all shadow-sm hover:shadow-md"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 text-2xl font-bold"
+                title="Clear search"
+              >
+                ×
+              </button>
+            )}
+          </div>
+          {searchQuery && (
+            <p className="mt-2 text-sm text-gray-600">
+              Found {filteredNews.length} article{filteredNews.length !== 1 ? 's' : ''} matching "{searchQuery}"
+            </p>
+          )}
+        </div>
+
         {/* Region Toggle Buttons */}
         <div className="flex gap-4 mb-6">
           <button
@@ -261,7 +299,26 @@ export const EnhancedNewsHub: React.FC = () => {
 
         {/* News Articles */}
         <div className="space-y-4">
-          {filteredNews.map((article) => (
+          {filteredNews.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">🔍</div>
+              <h3 className="text-2xl font-bold text-gray-700 mb-2">No articles found</h3>
+              <p className="text-gray-500 mb-4">
+                {searchQuery 
+                  ? `No articles match "${searchQuery}". Try different keywords.`
+                  : 'No articles available in this region.'}
+              </p>
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition-colors"
+                >
+                  Clear Search
+                </button>
+              )}
+            </div>
+          ) : (
+            filteredNews.map((article) => (
             <article key={article.id} className="border-b border-gray-200 pb-4 hover:bg-gray-50 p-4 rounded-lg transition-colors">
               <h3 className="text-xl font-semibold text-blue-900 mb-2">
                 {article.title}
@@ -281,15 +338,8 @@ export const EnhancedNewsHub: React.FC = () => {
                 </button>
               </div>
             </article>
-          ))}
+          )))}
         </div>
-
-        {/* No Results Message */}
-        {filteredNews.length === 0 && (
-          <div className="text-center py-8 text-gray-500">
-            No news articles available for this region.
-          </div>
-        )}
       </section>
 
       {/* Article Detail Modal */}
