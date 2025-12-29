@@ -6,7 +6,21 @@ This document explains how to apply the conflict resolution from this branch to 
 
 PR #3 has merge conflicts with the `main` branch because they have unrelated histories. The conflicts have been successfully resolved in this branch (`copilot/resolve-merge-conflicts-pr3`) and need to be applied to the PR #3 branch.
 
-## Automatic Script
+## Method 1: Patch Files (Recommended)
+
+The cleanest approach is to apply the pre-generated patch files:
+
+```bash
+# From the copilot/resolve-merge-conflicts-pr3 branch
+./apply-patches-to-pr3.sh
+git push origin copilot/remove-secrets-add-env-example-another-one
+```
+
+The patch files in `patches/` directory contain:
+1. `0001-Merge-pull-request-6-from-danielhayward50-cell-rever.patch` - Main merge commit
+2. `0002-Fix-ensure-EnhancedNewsHub.tsx-has-no-merge-conflict.patch` - Fix for EnhancedNewsHub
+
+## Method 2: Automated Merge Script
 
 Run this script from the repository root to automatically apply the fixes to PR #3:
 
