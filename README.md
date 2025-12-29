@@ -39,6 +39,30 @@ npm run build
 npm run preview
 ```
 
+## Deployment
+
+🚀 **Ready to deploy?** See the complete [Deployment Guide](DEPLOYMENT.md) for detailed instructions!
+
+### Quick Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/danielhayward50-cell/Adriana-Guide)
+
+**Steps:**
+1. Push your code to GitHub
+2. Go to [vercel.com](https://vercel.com)
+3. Sign in with GitHub
+4. Click "Add New Project" → Import your repository
+5. Click "Deploy" (Vercel auto-detects Vite configuration)
+
+Your app will be live at: `https://your-project.vercel.app`
+
+**Check if ready to deploy:**
+```bash
+./check-deployment.sh
+```
+
+**For complete deployment instructions, troubleshooting, and mobile setup, see [DEPLOYMENT.md](DEPLOYMENT.md)**
+
 ## Development
 
 This project uses:

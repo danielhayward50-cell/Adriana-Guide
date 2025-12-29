@@ -1,11 +1,9 @@
 import React from 'react';
 
-type Section = 'home' | 'reels' | 'news' | 'debates' | 'surveys' | 'tendencies' | 'community';
-
 interface ColombianLayoutProps {
   children: React.ReactNode;
-  activeSection?: Section;
-  onNavigate?: (section: Section) => void;
+  activeSection?: 'home' | 'reels' | 'news' | 'debates' | 'surveys' | 'tendencies' | 'community';
+  onNavigate?: (section: string) => void;
 }
 
 export const ColombianLayout: React.FC<ColombianLayoutProps> = ({ 
