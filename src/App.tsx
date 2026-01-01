@@ -14,10 +14,10 @@ type Section = 'home' | 'reels' | 'news' | 'debates' | 'surveys' | 'tendencies' 
 export default function App() {
   const [activeSection, setActiveSection] = useState<Section>('home');
 
-  const handleNavigate = (section: Section) => {
+  const handleNavigate = (section: string) => {
     if (section === activeSection) return;
 
-    setActiveSection(section);
+    setActiveSection(section as Section);
     requestAnimationFrame(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
